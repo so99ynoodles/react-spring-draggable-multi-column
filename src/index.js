@@ -11,6 +11,7 @@ render(
     defaultColumn={1}
     width={420}
     height={120}
+    draggable
   />,
   document.getElementById('root')
 )
