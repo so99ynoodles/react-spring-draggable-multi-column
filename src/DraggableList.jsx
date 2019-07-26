@@ -1,13 +1,23 @@
 import React, { useRef, useEffect } from 'react'
-import clamp from 'lodash-es/clamp'
+import clamp from 'lodash/clamp'
 import swap from 'lodash-move'
 import { useGesture } from 'react-use-gesture'
 import { useSprings, animated, interpolate } from 'react-spring'
 import useMedia from './use-media'
 import './styles.css'
 
-// Returns fitting styles for dragged/idle items
-const fn = (order, columnCount = 1, width, height, down, originalIndex, originalRow, originalCol, x, y) => index => {
+const reorder = (
+  order,
+  columnCount = 1,
+  width,
+  height,
+  down,
+  originalIndex,
+  originalRow,
+  originalCol,
+  x,
+  y
+) => index => {
   const itemIndex = order.indexOf(index)
   const row = Math.floor(itemIndex / columnCount) + 1
   const column = columnCount === 1 ? 0 : itemIndex % columnCount
@@ -30,17 +40,18 @@ export default function DraggableList({
   columns = [5, 1],
   defaultColumn = 1,
   width = 400,
-  height = 100
+  height = 100,
+  draggable = true
 }) {
   const columnCount = useMedia(mediaQueries.map(width => `(min-width: ${width}px)`), columns, defaultColumn)
   const order = useRef(items.map((_, index) => index))
-  const [springs, setSprings] = useSprings(items.length, fn(order.current, columnCount, width, height))
+  const [springs, setSprings] = useSprings(items.length, reorder(order.current, columnCount, width, height))
   useEffect(() => {
-    console.log(columnCount)
-    setSprings(fn(order.current, columnCount, width, height))
+    setSprings(reorder(order.current, columnCount, width, height))
   }, [columnCount, width, height, setSprings])
 
   const bind = useGesture(({ args: [originalIndex], down, delta: [x, y] }) => {
+    if (!draggable) return
     const itemIndex = order.current.indexOf(originalIndex)
     const originalRow = Math.floor(itemIndex / columnCount)
     const originalCol = columnCount === 1 ? 0 : itemIndex % columnCount
@@ -48,7 +59,7 @@ export default function DraggableList({
     const curCol = clamp(Math.round((originalCol * width + x) / width), 0, columnCount - 1)
     const curIndex = curRow * columnCount + curCol
     const newOrder = swap(order.current, itemIndex, curIndex)
-    setSprings(fn(newOrder, columnCount, width, height, down, originalIndex, originalRow, originalCol, x, y))
+    setSprings(reorder(newOrder, columnCount, width, height, down, originalIndex, originalRow, originalCol, x, y))
     if (!down) order.current = newOrder
   })
 
