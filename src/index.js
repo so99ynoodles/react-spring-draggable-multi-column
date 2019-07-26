@@ -6,7 +6,7 @@ import DraggableList from './DraggableList'
 
 render(
   <DraggableList
-    items={'RELATIONS'.split('')}
+    items={'So99yNoodles'.split('')}
     mediaQueries={[1880, 1460, 840, 420]}
     columns={[4, 3, 2, 1]}
     defaultColumn={1}
