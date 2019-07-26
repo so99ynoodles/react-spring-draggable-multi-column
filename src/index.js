@@ -1,5 +1,4 @@
-// Original: https://github.com/chenglou/react-motion/tree/master/demos/demo8-draggable-list
-
+// Original:(https://codesandbox.io/embed/r5qmj8m6lq)
 import { render } from 'react-dom'
 import React from 'react'
 import DraggableList from './DraggableList'
