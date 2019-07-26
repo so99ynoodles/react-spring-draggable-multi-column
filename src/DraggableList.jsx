@@ -6,7 +6,6 @@ import { useSprings, animated, interpolate } from 'react-spring'
 import useMedia from './use-media'
 import './styles.css'
 
-// Returns fitting styles for dragged/idle items
 const fn = (order, columnCount = 1, width, height, down, originalIndex, originalRow, originalCol, x, y) => index => {
   const itemIndex = order.indexOf(index)
   const row = Math.floor(itemIndex / columnCount) + 1
@@ -36,7 +35,6 @@ export default function DraggableList({
   const order = useRef(items.map((_, index) => index))
   const [springs, setSprings] = useSprings(items.length, fn(order.current, columnCount, width, height))
   useEffect(() => {
-    console.log(columnCount)
     setSprings(fn(order.current, columnCount, width, height))
   }, [columnCount, width, height, setSprings])
 
